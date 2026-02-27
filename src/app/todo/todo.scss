@@ -1,0 +1,228 @@
+:host {
+  display: block;
+}
+
+.todo-page {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sapContent_Gap);
+}
+
+/* KPI Row */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sapContent_Gap);
+}
+
+.kpi-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sapContent_Space_S) var(--sapContent_Space_S) var(--sapContent_Space_M);
+}
+
+.kpi-value {
+  font-family: var(--sapFontHeaderFamily);
+  font-size: var(--sapFontHeader1Size);
+  font-weight: 700;
+  color: var(--sapTitleColor);
+  line-height: 1;
+}
+
+.kpi-value--active { color: var(--sapInformativeColor); }
+.kpi-value--done   { color: var(--sapPositiveColor); }
+
+.kpi-icon {
+  font-size: 2rem;
+  color: var(--sapContent_IconColor);
+  opacity: 0.5;
+}
+
+.kpi-icon--active { color: var(--sapInformativeColor); }
+.kpi-icon--done   { color: var(--sapPositiveColor); }
+
+/* Add Card */
+.add-card {
+  width: 100%;
+}
+
+.add-body {
+  padding: var(--sapContent_Space_S);
+}
+
+.add-row {
+  display: flex;
+  gap: var(--sapContent_Space_S);
+  align-items: center;
+}
+
+.add-input {
+  flex: 1;
+}
+
+.priority-select {
+  min-width: 130px;
+}
+
+/* List Card */
+.list-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sapContent_Space_S);
+  padding: var(--sapContent_Space_S);
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--sapContent_Space_Tiny);
+  align-items: center;
+}
+
+/* Toolbar (filter + search) */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sapContent_Space_S);
+}
+
+.search-input {
+  max-width: 220px;
+}
+
+/* Todo Items */
+.todo-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sapContent_Space_S);
+  padding: var(--sapContent_Space_S);
+  border-bottom: var(--sapElement_BorderWidth) solid var(--sapList_BorderColor);
+  transition: background 0.15s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--sapList_Hover_Background);
+    border-radius: var(--sapElement_BorderCornerRadius);
+  }
+
+  &--completed {
+    opacity: 0.65;
+
+    .item-title {
+      text-decoration: line-through;
+      color: var(--sapContent_LabelColor);
+    }
+  }
+}
+
+.item-left {
+  flex-shrink: 0;
+}
+
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.item-title {
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapTextColor);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sapContent_Space_Tiny);
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+
+  .todo-item:hover & {
+    opacity: 1;
+  }
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sapContent_Space_S);
+  padding: var(--sapContent_Space_M) 0;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: var(--sapContent_IconColor);
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontLargeSize);
+  color: var(--sapContent_LabelColor);
+  margin: 0;
+}
+
+/* Dialog */
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sapContent_Space_S);
+  padding: var(--sapContent_Space_S) var(--sapContent_Space_M);
+}
+
+.dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dialog-label {
+  font-family: var(--sapFontSemiboldFamily);
+  font-size: var(--sapFontSmallSize);
+  color: var(--sapContent_LabelColor);
+}
+
+.dialog-input {
+  width: 100%;
+}
+
+.dialog-text {
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  color: var(--sapTextColor);
+  margin: 0;
+}
+
+.dialog-footer {
+  display: flex;
+  gap: var(--sapContent_Space_S);
+  padding: var(--sapContent_Space_S) var(--sapContent_Space_M);
+  justify-content: flex-end;
+}
