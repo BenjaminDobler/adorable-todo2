@@ -1,0 +1,11 @@
+@use '@fundamental-ngx/core/styles/fundamental-ngx-core.css';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--sapFontFamily);
+  font-size: var(--sapFontSize);
+  background-color: var(--sapShell_Background);
+  color: var(--sapTextColor);
+}
