@@ -1,0 +1,14 @@
+<ui5-bar design="Header">
+  <ui5-title slot="startContent">My App</ui5-title>
+  <ui5-select slot="endContent" (ui5Change)="onThemeChange($any($event))">
+    @for (theme of themes; track theme.id) {
+      <ui5-option [value]="theme.id" [selected]="theme.id === currentThemeId()">
+        {{ theme.name }}
+      </ui5-option>
+    }
+  </ui5-select>
+</ui5-bar>
+
+<div class="content">
+  <router-outlet />
+</div>
