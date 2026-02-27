@@ -1,0 +1,236 @@
+<div data-elements-id="todo-page-1" class="todo-page">
+
+  <!-- KPI Row -->
+  <div data-elements-id="todo-kpi-row-1" class="kpi-row">
+    <ui5-card data-elements-id="todo-kpi-total-1" accessibleName="Total tasks">
+      <ui5-card-header slot="header" titleText="Total" [subtitleText]="totalCount() + ' tasks'">
+      </ui5-card-header>
+      <div data-elements-id="todo-kpi-total-body-1" class="kpi-body">
+        <span data-elements-id="todo-kpi-total-val-1" class="kpi-value">{{ totalCount() }}</span>
+        <ui5-icon data-elements-id="todo-kpi-total-icon-1" name="task" class="kpi-icon"></ui5-icon>
+      </div>
+    </ui5-card>
+    <ui5-card data-elements-id="todo-kpi-active-1" accessibleName="Active tasks">
+      <ui5-card-header slot="header" titleText="Active" [subtitleText]="activeCount() + ' remaining'">
+      </ui5-card-header>
+      <div data-elements-id="todo-kpi-active-body-1" class="kpi-body">
+        <span data-elements-id="todo-kpi-active-val-1" class="kpi-value kpi-value--active">{{ activeCount() }}</span>
+        <ui5-icon data-elements-id="todo-kpi-active-icon-1" name="pending" class="kpi-icon kpi-icon--active"></ui5-icon>
+      </div>
+    </ui5-card>
+    <ui5-card data-elements-id="todo-kpi-done-1" accessibleName="Completed tasks">
+      <ui5-card-header slot="header" titleText="Completed" [subtitleText]="completedCount() + ' done'">
+      </ui5-card-header>
+      <div data-elements-id="todo-kpi-done-body-1" class="kpi-body">
+        <span data-elements-id="todo-kpi-done-val-1" class="kpi-value kpi-value--done">{{ completedCount() }}</span>
+        <ui5-icon data-elements-id="todo-kpi-done-icon-1" name="accept" class="kpi-icon kpi-icon--done"></ui5-icon>
+      </div>
+    </ui5-card>
+  </div>
+
+  <!-- Add Task Card -->
+  <ui5-card data-elements-id="todo-add-card-1" accessibleName="Add new task" class="add-card">
+    <ui5-card-header data-elements-id="todo-add-header-1" slot="header" titleText="New Task" subtitleText="Add something to your list">
+    </ui5-card-header>
+    <div data-elements-id="todo-add-body-1" class="add-body">
+      <div data-elements-id="todo-add-row-1" class="add-row">
+        <ui5-input
+          data-elements-id="todo-add-input-1"
+          class="add-input"
+          placeholder="What needs to be done?"
+          [value]="newTitle()"
+          (ui5Input)="onNewTitleInput($any($event))"
+          (keydown)="onAddKeyDown($event)">
+          <ui5-icon slot="icon" name="checklist"></ui5-icon>
+        </ui5-input>
+        <ui5-select
+          data-elements-id="todo-add-priority-1"
+          class="priority-select"
+          (ui5Change)="onNewPriorityChange($any($event))">
+          <ui5-option value="Low">🟢 Low</ui5-option>
+          <ui5-option value="Medium" [selected]="true">🟡 Medium</ui5-option>
+          <ui5-option value="High">🔴 High</ui5-option>
+        </ui5-select>
+        <ui5-button
+          data-elements-id="todo-add-btn-1"
+          design="Emphasized"
+          icon="add"
+          [disabled]="!newTitle().trim()"
+          (ui5Click)="addTodo()">
+          Add Task
+        </ui5-button>
+      </div>
+    </div>
+  </ui5-card>
+
+  <!-- Filter & Search Card -->
+  <ui5-card data-elements-id="todo-list-card-1" accessibleName="Todo list">
+    <ui5-card-header data-elements-id="todo-list-header-1" slot="header" titleText="My Tasks">
+      <div data-elements-id="todo-list-actions-1" slot="action" class="header-actions">
+        @if (completedCount() > 0) {
+          <ui5-button
+            data-elements-id="todo-clear-btn-1"
+            design="Transparent"
+            icon="decline"
+            (ui5Click)="clearCompleted()">
+            Clear Completed
+          </ui5-button>
+        }
+      </div>
+    </ui5-card-header>
+
+    <div data-elements-id="todo-list-body-1" class="list-body">
+
+      <!-- Filter + Search bar -->
+      <div data-elements-id="todo-toolbar-1" class="toolbar">
+        <ui5-segmented-button
+          data-elements-id="todo-filter-1"
+          (ui5SelectionChange)="onFilterChange($any($event))">
+          <ui5-segmented-button-item data-elements-id="todo-filter-all-1" [selected]="filter() === 'All'">All</ui5-segmented-button-item>
+          <ui5-segmented-button-item data-elements-id="todo-filter-active-1" [selected]="filter() === 'Active'">Active</ui5-segmented-button-item>
+          <ui5-segmented-button-item data-elements-id="todo-filter-done-1" [selected]="filter() === 'Completed'">Completed</ui5-segmented-button-item>
+        </ui5-segmented-button>
+        <ui5-input
+          data-elements-id="todo-search-1"
+          class="search-input"
+          placeholder="Search tasks…"
+          [showClearIcon]="true"
+          (ui5Input)="onSearchInput($any($event))">
+          <ui5-icon slot="icon" name="filter"></ui5-icon>
+        </ui5-input>
+      </div>
+
+      <!-- Task List -->
+      <div data-elements-id="todo-items-1" class="todo-items">
+        @if (filteredTodos().length === 0) {
+          <div data-elements-id="todo-empty-1" class="empty-state">
+            <ui5-icon data-elements-id="todo-empty-icon-1" name="checklist" class="empty-icon"></ui5-icon>
+            <p data-elements-id="todo-empty-text-1" class="empty-text">No tasks here. You're all caught up!</p>
+          </div>
+        } @else {
+          @for (todo of filteredTodos(); track todo.id) {
+            <div data-elements-id="todo-item-1" class="todo-item" [class.todo-item--completed]="todo.completed">
+              <div data-elements-id="todo-item-check-1" class="item-left">
+                <ui5-checkbox
+                  data-elements-id="todo-checkbox-1"
+                  [checked]="todo.completed"
+                  (ui5Change)="onToggle($any($event), todo.id)">
+                </ui5-checkbox>
+              </div>
+              <div data-elements-id="todo-item-content-1" class="item-content">
+                <span data-elements-id="todo-item-title-1" class="item-title">{{ todo.title }}</span>
+                <div data-elements-id="todo-item-meta-1" class="item-meta">
+                  <ui5-tag
+                    data-elements-id="todo-item-tag-1"
+                    [colorScheme]="priorityColorScheme(todo.priority)"
+                    [hideStateIcon]="true"
+                    size="S">
+                    {{ todo.priority }}
+                  </ui5-tag>
+                </div>
+              </div>
+              <div data-elements-id="todo-item-actions-1" class="item-actions">
+                <ui5-button
+                  data-elements-id="todo-edit-btn-1"
+                  design="Transparent"
+                  icon="edit"
+                  tooltip="Edit task"
+                  (ui5Click)="openEdit(todo)">
+                </ui5-button>
+                <ui5-button
+                  data-elements-id="todo-delete-btn-1"
+                  design="Transparent"
+                  icon="delete"
+                  tooltip="Delete task"
+                  (ui5Click)="confirmDelete(todo)">
+                </ui5-button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </ui5-card>
+</div>
+
+<!-- Edit Dialog -->
+<ui5-dialog
+  data-elements-id="todo-edit-dialog-1"
+  headerText="Edit Task"
+  [open]="editDialogOpen()"
+  (ui5Close)="editDialogOpen.set(false)">
+  <div data-elements-id="todo-edit-form-1" class="dialog-form">
+    <div data-elements-id="todo-edit-field-1" class="dialog-field">
+      <label data-elements-id="todo-edit-label-1" class="dialog-label">Task Name</label>
+      <ui5-input
+        data-elements-id="todo-edit-input-1"
+        class="dialog-input"
+        [value]="editTitle()"
+        (ui5Input)="onEditTitleInput($any($event))">
+      </ui5-input>
+    </div>
+    <div data-elements-id="todo-edit-priority-field-1" class="dialog-field">
+      <label data-elements-id="todo-edit-priority-label-1" class="dialog-label">Priority</label>
+      <ui5-select
+        data-elements-id="todo-edit-priority-1"
+        class="dialog-input"
+        (ui5Change)="onEditPriorityChange($any($event))">
+        <ui5-option value="Low" [selected]="editPriority() === 'Low'">🟢 Low</ui5-option>
+        <ui5-option value="Medium" [selected]="editPriority() === 'Medium'">🟡 Medium</ui5-option>
+        <ui5-option value="High" [selected]="editPriority() === 'High'">🔴 High</ui5-option>
+      </ui5-select>
+    </div>
+  </div>
+  <div data-elements-id="todo-edit-footer-1" slot="footer" class="dialog-footer">
+    <ui5-button
+      data-elements-id="todo-save-btn-1"
+      design="Emphasized"
+      [disabled]="!editTitle().trim()"
+      (ui5Click)="saveEdit()">
+      Save
+    </ui5-button>
+    <ui5-button
+      data-elements-id="todo-cancel-btn-1"
+      design="Transparent"
+      (ui5Click)="editDialogOpen.set(false)">
+      Cancel
+    </ui5-button>
+  </div>
+</ui5-dialog>
+
+<!-- Delete Confirmation Dialog -->
+<ui5-dialog
+  data-elements-id="todo-delete-dialog-1"
+  headerText="Delete Task"
+  state="Negative"
+  [open]="deleteDialogOpen()"
+  (ui5Close)="deleteDialogOpen.set(false)">
+  <div data-elements-id="todo-delete-body-1" class="dialog-form">
+    <p data-elements-id="todo-delete-text-1" class="dialog-text">
+      Are you sure you want to delete <strong>"{{ todoToDelete()?.title }}"</strong>?
+    </p>
+  </div>
+  <div data-elements-id="todo-delete-footer-1" slot="footer" class="dialog-footer">
+    <ui5-button
+      data-elements-id="todo-delete-confirm-1"
+      design="Negative"
+      icon="delete"
+      (ui5Click)="onDeleteConfirmed()">
+      Delete
+    </ui5-button>
+    <ui5-button
+      data-elements-id="todo-delete-cancel-1"
+      design="Transparent"
+      (ui5Click)="deleteDialogOpen.set(false)">
+      Cancel
+    </ui5-button>
+  </div>
+</ui5-dialog>
+
+<!-- Toast -->
+<ui5-toast
+  data-elements-id="todo-toast-1"
+  placement="BottomCenter"
+  [open]="toastOpen()">
+  {{ toastMessage() }}
+</ui5-toast>
